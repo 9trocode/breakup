@@ -295,6 +295,23 @@ func TestUninstallLeavesRcClean(t *testing.T) {
 	}
 }
 
+func TestUninstallForgetRemovesHome(t *testing.T) {
+	dir := setupHome(t)
+	if _, err := run(t, "for", "3m"); err != nil {
+		t.Fatal(err)
+	}
+	bu := filepath.Join(dir, ".breakup")
+	if _, err := os.Stat(bu); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := run(t, "uninstall", "--forget"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(bu); !os.IsNotExist(err) {
+		t.Fatalf(".breakup remained after --forget: %v", err)
+	}
+}
+
 func TestNeedNameBeforeBreak(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)

@@ -50,4 +50,10 @@ func TestScriptExportsBin(t *testing.T) {
 	if !strings.Contains(s, "/tmp/fake-breakup/bin") {
 		t.Errorf("script = %s", s)
 	}
+	if !strings.Contains(s, "unset -f npx") {
+		t.Errorf("expected npx function strip: %s", s)
+	}
+	if !strings.Contains(s, "unalias claude") {
+		t.Errorf("expected claude unalias: %s", s)
+	}
 }

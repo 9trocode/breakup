@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/nitrocode/breakup/internal/guard"
 	"github.com/nitrocode/breakup/internal/home"
 )
 
@@ -16,9 +17,16 @@ const (
 )
 
 func Script() string {
-	return fmt.Sprintf(`# managed by breakup. do not edit.
-export PATH="%s:$PATH"
-`, home.BinDir())
+	var b strings.Builder
+	b.WriteString("# managed by breakup. do not edit.\n")
+	fmt.Fprintf(&b, "export PATH=%q:$PATH\n", home.BinDir())
+	// nvm and friends define npx/claude as functions. those beat PATH.
+	b.WriteString("# aliases/functions beat PATH. knock them down.\n")
+	for _, name := range guard.AllShimNames() {
+		fmt.Fprintf(&b, "unalias %s >/dev/null 2>&1 || true\n", name)
+		fmt.Fprintf(&b, "unset -f %s >/dev/null 2>&1 || true\n", name)
+	}
+	return b.String()
 }
 
 func RCSnippet() string {

@@ -33,6 +33,10 @@ shell rc, and starts the break. **open a new terminal.**
 you name her. she won't pick it. after that, every blocked `claude` and
 `grok` opens with her name at the top — not `breakup`.
 
+open a new terminal after you leave. the hook prepends PATH **and**
+clears shell functions/aliases for those clis (nvm's `npx` is a
+function — PATH alone would lose).
+
 ## use it
 
 ```bash

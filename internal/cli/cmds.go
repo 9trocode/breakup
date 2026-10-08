@@ -266,7 +266,7 @@ func newUninstallCmd() *cobra.Command {
 			_ = guard.RemoveShims()
 			_ = hook.Uninstall()
 			if forget {
-				_ = os.Remove(home.StateFile())
+				_ = os.RemoveAll(home.Dir())
 				render.Title(stdout, "breakup")
 			} else {
 				_, _ = state.Update(func(cur *state.State) error {
